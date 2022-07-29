@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width initial-scale=1.0" />
+    <title>Brain.js</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="container" fontsize="{{fontSize: width/12}}">
+      <div id="bg-container">
+        <h1 id="logo">🖥️</h1>
+        <h2>Determining Hardware or Software Using Machine Learning</h2>
+        <form novalidate>
+          <label for="input">Enter something computer related:</label>
+          <input
+            name="input"
+            type="text"
+            placeholder="Ex: power supply broken"
+            required
+          />
+          <button type="submit">Submit</button>
+        </form>
+        <div class="ul-container">
+          <h3>Software</h3>
+          <ul id="software"></ul>
+        </div>
+        <div class="ul-container">
+          <h3>Hardware</h3>
+          <ul id="hardware"></ul>
+        </div>
+        <script src="//unpkg.com/brain.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+          $(document).ready(function () {
+            const network = new brain.recurrent.LSTM();
+            const testData = [
+              {
+                text: "graphics processing unit",
+                category: "hardware",
+              },
+              {
+                text: "central processing unit",
+                category: "hardware",
+              },
+              {
+                text: "cables are broken",
+                category: "hardware",
+              },
+              {
+                text: "my unit test failed",
+                category: "software",
+              },
+              {
+                text: "code error",
+                category: "software",
+              },
+              {
+                text: "i have a type error in my code",
+                category: "software",
+              },
+              {
+                text: "my computer screen is not turning on",
+                category: "hardware",
+              },
+              {
+                text: "too little memory",
+                category: "hardware",
+              },
+              {
+                text: "computer fans are very loud",
+                category: "hardware",
+              },
+              {
+                text: "tried the program, but it was buggy",
+                category: "software",
+              },
+              {
+                text: "i need a new power supply",
+                category: "hardware",
+              },
+              {
+                text: "my keyboard is awesome",
+                category: "hardware",
+              },
+              {
+                text: "my mouse lights up",
+                category: "hardware",
+              },
+              {
+                text: "wireless mouse",
+                category: "hardware",
+              },
+              {
+                text: "keyboard",
+                category: "hardware",
+              },
+              {
+                text: "the drive has a 2TB capacity",
+                category: "hardware",
+              },
+              {
+                text: "unit-tests",
+                category: "software",
+              },
+              {
+                text: "program",
+                category: "software",
+              },
+              {
+                text: "power supply",
+                category: "hardware",
+              },
+              {
+                text: "drive",
+                category: "hardware",
+              },
+              {
+                text: "it needs more memory",
+                category: "hardware",
+              },
+              {
+                text: "code",
+                category: "software",
+              },
+              {
+                text: "i found some bugs in the code",
+                category: "software",
+              },
+              {
+                text: "i swapped the memory",
+                category: "hardware",
+              },
+              {
+                text: "i tested the code",
+                category: "software",
+              },
+              {
+                text: "i love computers",
+                category: "hardware",
+              },
+              {
+                text: "programming",
+                category: "software",
+              },
+              {
+                text: "i broke my pc",
+                category: "hardware",
+              },
+              {
+                text: "computer",
+                category: "hardware",
+              },
+              {
+                text: "buy me a laptop",
+                category: "hardware",
+              },
+              {
+                text: "i love to play games",
+                category: "software",
+              },
+              {
+                text: "screen",
+                category: "hardware",
+              },
+              {
+                text: "code",
+                category: "software",
+              },
+              {
+                text: "screen",
+                category: "hardware",
+              },
+            ];
+
+            const trainingData = testData.map((data) => ({
+              input: data.text,
+              output: data.category,
+            }));
+
+            network.train(trainingData, {
+              iterations: 1000,
+              log: (stats) => {
+                console.log(stats);
+              },
+            });
+            $("form").submit((evt) => {
+              evt.preventDefault();
+            });
+            $("button").on("click", function (evt) {
+              let input = $("input").val();
+              let result = network.run(input);
+              console.log(result);
+              if (result === "software") {
+                $("#software").append(`<li>${input}</li>`);
+              } else {
+                $("#hardware").append(`<li>${input}</li>`);
+              }
+              $("form").trigger("reset");
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
